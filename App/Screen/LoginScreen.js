@@ -36,7 +36,7 @@ export default function LoginScreen() {
         <View style={{ display: 'flex', alignItems: "center" }}>
 
             <Image source={require('../../assets/images/app.png')}
-                style={{ width: 500, height: 500, objectFit: 'contain', marginTop: 50, borderRadius: 250 }} />
+                style={{ width: 500, height: 500, objectFit: 'contain', marginTop: 50, borderRadius: 50,overflow: 'hidden' }} />
             <View
                 style={{
                     height: 500,
