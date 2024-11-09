@@ -1,14 +1,18 @@
 import { useFonts } from 'expo-font';
 import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-expo';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import LoginScreen from './App/Screen/LoginScreen';
 import Constant from './App/Utils/Constant';
 import { NavigationContainer } from '@react-navigation/native';
 import TabsNavigation from './App/Navigations/TabsNavigation';
 import Toast from 'react-native-toast-message';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { CompleteChapterContext } from './App/Context/CompleteChapterContext';
+import { UserPointsContext } from './App/Context/UserPointsContext';
 
 export default function App() {
+  const [isChapterComplete, setIsChapterComplete] = useState(false);
+  const [userPoints, setUserPoints] = useState(0);
   const [fontsloaded] = useFonts({
     'outfit-regular': require('./assets/fonts/Outfit-Regular.ttf'),
     'outfit-light': require('./assets/fonts/Outfit-Light.ttf'),
@@ -24,6 +28,8 @@ export default function App() {
 
   return (
     <ClerkProvider publishableKey={Constant.ClerkKey}>
+      <UserPointsContext.Provider value={{userPoints, setUserPoints}}>
+      <CompleteChapterContext.Provider value={{isChapterComplete, setIsChapterComplete}}>
       <View style={styles.container}>
         <SignedIn>
           <NavigationContainer>
@@ -35,6 +41,8 @@ export default function App() {
         </SignedOut>
         <Toast forwardRef={toastRef} />
       </View>
+      </CompleteChapterContext.Provider>
+      </UserPointsContext.Provider>
     </ClerkProvider>
   );
 }

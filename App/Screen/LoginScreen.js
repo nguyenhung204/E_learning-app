@@ -25,7 +25,11 @@ export default function LoginScreen() {
             setActive({ session: createdSessionId });
           }
         } else {
-          // Use signIn or signUp for next steps such as MFA
+          if (signIn) {
+            signIn();
+          } else if (signUp) {
+            signUp();
+          }
         }
       } catch (err) {
         console.error('OAuth error', err);
@@ -36,7 +40,7 @@ export default function LoginScreen() {
         <View style={{ display: 'flex', alignItems: "center" }}>
 
             <Image source={require('../../assets/images/app.png')}
-                style={{ width: 500, height: 500, objectFit: 'contain', marginTop: 50, borderRadius: 50,overflow: 'hidden' }} />
+                style={{ width: 350, height: 500, marginTop:20, objectFit: 'cover', borderRadius: 50,overflow: 'hidden' }} />
             <View
                 style={{
                     height: 500,

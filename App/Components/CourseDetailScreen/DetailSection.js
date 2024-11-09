@@ -84,7 +84,6 @@ export default function DetailSection({ course, enrollCourse, enrolledCourse }) 
     </View>
   )
 }
-
 const styles = StyleSheet.create({
   rowStyle: {
     display: 'flex',

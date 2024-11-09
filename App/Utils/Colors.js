@@ -5,5 +5,5 @@ export default {
     WHITE : '#FFFFFF',
     BLACK : '#000000',
     GRAY : '#979797',
-    GREEN : 'E3FDE5'
+    GREEN : 'rgba(50, 220, 75, 0.8)'
 }

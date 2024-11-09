@@ -1,15 +1,15 @@
 import { View, Text, TouchableOpacity } from 'react-native'
-import React from 'react';
+import React, { useContext } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Colors from '../../Utils/Colors';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
+import { CompleteChapterContext } from '../../Context/CompleteChapterContext';
 
 export default function ChapterSection({ chapterList, enrolledCourse }) {
-
   const navigator = useNavigation();
+  const { isChapterComplete, setIsChapterComplete} = useContext(CompleteChapterContext);
 
-  console.log(enrolledCourse[0]?.completedChapter)
   const OnChapterPress = (chapter) => {
     if (enrolledCourse.length == 0) {
       Toast.show({
@@ -19,6 +19,7 @@ export default function ChapterSection({ chapterList, enrolledCourse }) {
       })
     }
     else {
+      setIsChapterComplete(false);
       navigator.navigate('ChapterContent', {
         content: chapter.content,
         chapterId: chapter.id,
@@ -27,22 +28,29 @@ export default function ChapterSection({ chapterList, enrolledCourse }) {
     }
   }
 
-  //d
 
   const isEnrolled = enrolledCourse.length > 0;
 
-  const isChapterCompleted =(chapterId) =>{
-    if(enrolledCourse[0]?.completedChapter?.length <= 0)
-    {
-        return false;
+  const isChapterCompleted = (chapterId) => {
+    if (!isEnrolled || !enrolledCourse[0]?.completedChapter) {
+      return false;
     }
-    const resp = enrolledCourse[0].completedChapter.find(
-      item => item.chapterId == chapterId
-    )
-    return resp;
-  }
+    const resp = enrolledCourse[0]?.completedChapter.find(
+      item => item.chapterId === chapterId
+    );
+    return !!resp;
+  };
 
-  // const color = isEnrolled ? (isChapterCompleted(item.chapterId) ? Colors.GREEN : Colors.PRIMARY) : Colors.GRAY
+
+  const getColor = (chapterId) => {
+    if (isEnrolled && isChapterCompleted(chapterId)) {
+      return Colors.GREEN;
+    } else if (isEnrolled) {
+      return Colors.PRIMARY;
+    } else {
+      return Colors.GRAY;
+    }
+  };
   return chapterList && (
     
     <View style={{
@@ -66,8 +74,8 @@ export default function ChapterSection({ chapterList, enrolledCourse }) {
             padding: 20,
             borderWidth: 1,
             borderRadius: 10,
-            borderColor: isEnrolled ?  Colors.PRIMARY : Colors.GRAY,
-            marginTop: 10
+            borderColor: getColor(chapter.id),
+            marginTop: 10,
           }]}
           key={index}>
           <View style={{
@@ -76,22 +84,23 @@ export default function ChapterSection({ chapterList, enrolledCourse }) {
             gap: 10,
             alignItems: 'center'
           }}>
-            <Text style={{
+            {isChapterCompleted(chapter.id) ? <Ionicons name="checkmark-circle" size={25} color={Colors.GREEN} />
+            :<Text style={{
               fontFamily: 'outfit-semibold',
               fontSize: 27,
-              color: isEnrolled ?  Colors.PRIMARY : Colors.GRAY,
-            }}>{index + 1}</Text>
+              color: getColor(chapter.id),
+            }}>{index + 1}</Text>}
             <Text style={{
               fontFamily: 'outfit-regular',
               fontSize: 21,
-              color: isEnrolled ?  Colors.PRIMARY : Colors.GRAY,
+              color: getColor(chapter.id),
             }}>{chapter.title}</Text>
           </View>
 
           {enrolledCourse.length == 0 ?
-            <Ionicons name="lock-closed" size={25} color={Colors.GRAY} />
+            <Ionicons name="lock-closed" size={25} color={getColor(chapter.id)} />
             :
-            <Ionicons name="play-circle" size={25} color={Colors.PRIMARY} />
+            <Ionicons name="play-circle" size={25} color={getColor(chapter.id)} />
           }
         </TouchableOpacity>
       ))}
