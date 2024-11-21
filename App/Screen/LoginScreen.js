@@ -66,7 +66,6 @@ export default function LoginScreen() {
                         fontFamily: 'outfit-regular',
                         marginTop: 20
                     }}>Your Ultimate Programming Learning Box</Text>
-
                 <TouchableOpacity onPress={onPress}
                     style={{
                         backgroundColor: Colors.WHITE,

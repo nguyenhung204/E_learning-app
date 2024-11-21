@@ -1,49 +1,67 @@
-import { View, Text } from 'react-native'
+import { View, ScrollView } from 'react-native'
 import React, { useContext, useEffect } from 'react'
 import Header from '../Components/HomeScreen/Header'
 import Colors from '../Utils/Colors'
 import Courses from '../Components/HomeScreen/Courses'
-import { createNewUser, getUserDetail } from '../Services/services'
-import { UserPointsContext } from '../Context/UserPointsContext'
+import { createNewUser } from '../Services/services'
 import { useUser } from '@clerk/clerk-expo'
+import CourseProgress from '../Components/HomeScreen/CourseProgress'
+import { getUserDetail } from '../Services/services'
+import { UserPointsContext } from '../Context/UserPointsContext'
 
 export default function HomeScreen() {
   const {user} = useUser();
-  const {userPoints, setUserPoints} = useContext(UserPointsContext);
+  const {setUserPoints} = useContext(UserPointsContext);
 
-  useEffect(() =>{
-    user&&createUser();
-  },[user])
+  useEffect(() => {
+    const createUser = () => {
+      if (user) {
+        createNewUser(user.primaryEmailAddress.emailAddress, user.fullName, user.imageUrl)
+          .then((response) => {
+            if (response && response.userDetail?.point) {
+              setUserPoints(response.userDetail?.point);
+            }
+          });
+      }
+    };
+    if (user) {
+      createUser();
+    }
+  }, [user, setUserPoints]);
 
-  const createUser = () => {
-    if(user)
-    {
-      createNewUser(user.primaryEmailAddress.emailAddress, user.fullName, user.imageUrl)
-      .then((response) => {
-        if(response){
-          setUserPoints(response.userDetail?.point);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      if (user) {
+        try {
+          const response = await getUserDetail(user.primaryEmailAddress.emailAddress);
+          if (response && response.userDetail) {
+            setUserPoints(response.userDetail.point);
+            console.log('User Points Set:', response.userDetail.point);
+          }
+        } catch (error) {
+          console.error('Failed to fetch user details:', error);
         }
-      })
-    }
-  }
+      }
+    };
+    fetchUserDetails();
+    console.log('User 3:', user);
+  }, [user]);
 
-  const GetUser = () => {
-    getUserDetail(user.primaryEmailAddress.emailAddress)
-      .then((response) => {
-        setUserPoints(response.userDetail?.point);
-      })
-    }
+
+
   return (
-    <View>
+    <ScrollView>
       <View style={{ backgroundColor: Colors.PRIMARY, height: 250, padding: 20 }}>
         <Header />
       </View>
-      <View style = {{padding : 20}}>
+      <View>
         <View style = {{marginTop : -80}}>
+          <CourseProgress />
         <Courses level={'Basic'}  />
         </View>
         <Courses level={'Advance'}  />
       </View>
-    </View>
+    </ScrollView>
   )
 }

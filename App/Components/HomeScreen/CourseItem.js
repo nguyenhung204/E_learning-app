@@ -1,17 +1,16 @@
-
 import { View, Text, Image, StyleSheet } from 'react-native';
 import React from 'react'
 import Colors from '../../Utils/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import ProgressBarCourse from './ProgressBarCourse';
 
-export default function CourseItem({item}) {
+export default function CourseItem({item, completedChapter}) {
   return (
     <View style={{
         padding: 10,
         backgroundColor: Colors.WHITE,
         borderRadius: 15,
-        marginTop: 10,
-        marginBottom: 20,
+        marginBottom: 10,
         marginRight: 20,
     }}>
         <Image source={{ uri: item.banner?.url }}
@@ -34,7 +33,7 @@ export default function CourseItem({item}) {
                 }}>
                     <Ionicons name="book-outline" size={18} color="black" />
                     <Text style = {{fontFamily :'outfit-regular'}}>
-                        {item.chapter.content?.length} Chapters
+                        {item.chapter?.length} Chapters
                     </Text>
                 </View>
                 <View style={{
@@ -58,6 +57,10 @@ export default function CourseItem({item}) {
             }}
             >{item.price == 0 ? "Free" : item.price}</Text>
         </View>
+       { completedChapter !== undefined ? <ProgressBarCourse
+            totalChapter = {item?.chapter?.length}
+            completedChapter = {completedChapter}
+         /> : null}
     </View>
   )
 }

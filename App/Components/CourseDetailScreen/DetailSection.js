@@ -4,7 +4,7 @@ import Colors from '../../Utils/Colors'
 import OptionItem from './OptionItem'
 
 
-export default function DetailSection({ course, enrollCourse, enrolledCourse }) {
+export default function DetailSection({ course, enrollCourse, enrolledCourse, loading }) {
   return (
     <View style={{ padding: 10, borderRadius: 15, backgroundColor: Colors.WHITE }}>
       <Image source={{ uri: course?.banner?.url }} style={{
@@ -48,8 +48,9 @@ export default function DetailSection({ course, enrollCourse, enrolledCourse }) 
           gap : 10,
           marginTop : 10
         }}>
-          {enrolledCourse?.length == 0?<TouchableOpacity
+          {enrolledCourse?.length == 0 ?<TouchableOpacity
             onPress = {()=>enrollCourse()}
+            disabled={loading}
             style={{
               padding: 15,
               backgroundColor: Colors.PRIMARY,
@@ -62,7 +63,7 @@ export default function DetailSection({ course, enrollCourse, enrolledCourse }) 
                 textAlign: 'center',
                 fontSize: 17
               }}
-            >Enroll For Free</Text>
+            > {loading ? 'Enrolling...' : 'Enroll Free'}</Text>
           </TouchableOpacity>:null}
           <TouchableOpacity
             style={{

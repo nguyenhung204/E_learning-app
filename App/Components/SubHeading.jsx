@@ -4,7 +4,7 @@ import Colors from '../Utils/Colors'
 
 export default function SubHeading({text, color = Colors.BLACK}) {
   return (
-    <View>
+    <View style = {{padding : 10}}>
         <Text style={{
                 fontSize: 24,
                 fontFamily: 'outfit-bold',

@@ -8,7 +8,13 @@ import { CompleteChapterContext } from '../../Context/CompleteChapterContext';
 
 export default function ChapterSection({ chapterList, enrolledCourse }) {
   const navigator = useNavigation();
-  const { isChapterComplete, setIsChapterComplete} = useContext(CompleteChapterContext);
+  const { setIsChapterComplete} = useContext(CompleteChapterContext);
+  const { completedChapters } = useContext(CompleteChapterContext);
+
+  if (!enrolledCourse || !Array.isArray(enrolledCourse)) {
+    return null;
+  }
+
 
   const OnChapterPress = (chapter) => {
     if (enrolledCourse.length == 0) {
@@ -28,17 +34,15 @@ export default function ChapterSection({ chapterList, enrolledCourse }) {
     }
   }
 
-
   const isEnrolled = enrolledCourse.length > 0;
 
   const isChapterCompleted = (chapterId) => {
-    if (!isEnrolled || !enrolledCourse[0]?.completedChapter) {
-      return false;
+    if (!enrolledCourse[0]?.completedChapter) {
+      return completedChapters.includes(chapterId);
     }
-    const resp = enrolledCourse[0]?.completedChapter.find(
-      item => item.chapterId === chapterId
-    );
-    return !!resp;
+    return enrolledCourse[0].completedChapter.some(
+      chapter => chapter.chapterId === chapterId
+    ) || completedChapters.includes(chapterId);
   };
 
 

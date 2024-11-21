@@ -6,13 +6,14 @@ import Constant from './App/Utils/Constant';
 import { NavigationContainer } from '@react-navigation/native';
 import TabsNavigation from './App/Navigations/TabsNavigation';
 import Toast from 'react-native-toast-message';
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo} from 'react';
 import { CompleteChapterContext } from './App/Context/CompleteChapterContext';
 import { UserPointsContext } from './App/Context/UserPointsContext';
-
 export default function App() {
+
   const [isChapterComplete, setIsChapterComplete] = useState(false);
-  const [userPoints, setUserPoints] = useState(0);
+  const [completedChapters, setCompletedChapters] = useState([]);
+  const [userPoints, setUserPoints] = useState(null);
   const [fontsloaded] = useFonts({
     'outfit-regular': require('./assets/fonts/Outfit-Regular.ttf'),
     'outfit-light': require('./assets/fonts/Outfit-Light.ttf'),
@@ -26,10 +27,20 @@ export default function App() {
     return null; // or a loading spinner
   }
 
+  // const userPointsContextValue = useMemo(() => ({
+  //   userPoints,
+  //   setUserPoints,
+  // }), [userPoints]);
+
   return (
     <ClerkProvider publishableKey={Constant.ClerkKey}>
-      <UserPointsContext.Provider value={{userPoints, setUserPoints}}>
-      <CompleteChapterContext.Provider value={{isChapterComplete, setIsChapterComplete}}>
+     <UserPointsContext.Provider value={{ userPoints,setUserPoints}}>
+      <CompleteChapterContext.Provider value={{
+         isChapterComplete, 
+         setIsChapterComplete,
+         completedChapters,
+         setCompletedChapters
+      }}>
       <View style={styles.container}>
         <SignedIn>
           <NavigationContainer>
@@ -42,7 +53,7 @@ export default function App() {
         <Toast forwardRef={toastRef} />
       </View>
       </CompleteChapterContext.Provider>
-      </UserPointsContext.Provider>
+    </UserPointsContext.Provider>
     </ClerkProvider>
   );
 }

@@ -21,21 +21,21 @@ export default function TabsNavigation() {
                     )
                 }}
             />
-            <Tab.Screen name="my-course" component={MyCourses}
+            <Tab.Screen name="My-course" component={MyCourses}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="book" size={size} color={color} />
                     )
                 }}
             />
-            <Tab.Screen name="leader-board" component={LeaderBoard}
+            <Tab.Screen name="Leader-board" component={LeaderBoard}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons name="leaderboard" size={size} color={color} />
                     )
                 }}
             />
-            <Tab.Screen name="profile" component={ProfileScreen}
+            <Tab.Screen name="Profile" component={ProfileScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <MaterialIcons name="supervised-user-circle" size={size} color={color} />

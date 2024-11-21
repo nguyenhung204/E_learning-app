@@ -1,11 +1,60 @@
-import { View, Text, Image, StyleSheet, TextInput } from 'react-native'
-import React from 'react'
+import { View, Text, Image, StyleSheet, TextInput, FlatList, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useContext, useState, useEffect } from 'react'
 import { useUser } from '@clerk/clerk-expo';
 import Colors from '../../Utils/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { UserPointsContext } from '../../Context/UserPointsContext';
+import { useNavigation } from '@react-navigation/native';
+import { getCourseList } from '../../Services/services';
+ 
 
 export default function Header() {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { userPoints } = useContext(UserPointsContext);
+  const { isLoaded, user } = useUser();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    // Fetch all courses when component mounts
+    const fetchCourses = async () => {
+      try {
+        const basicCourses = await getCourseList('Basic');
+        const advanceCourses = await getCourseList('Advance');
+        setCourses([
+          ...(basicCourses?.courses || []),
+          ...(advanceCourses?.courses || [])
+        ]);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+    fetchCourses();
+  }, []);
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+    if (text.length > 0) {
+      const filtered = courses.filter(course =>
+        course.name.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredCourses(filtered);
+      setShowSuggestions(true);
+    } else {
+      setFilteredCourses([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleCourseSelect = (course) => {
+    setSearchQuery('');
+    setShowSuggestions(false);
+    navigation.navigate('CourseDetail', { course });
+  };
+
+
   return isLoaded && (
     <View>
       <View style={[{ justifyContent: 'space-between' }, styles.rowStyle]}>
@@ -26,13 +75,46 @@ export default function Header() {
           <Image source={require('../../../assets/images/coin.png')}
             style={{ width: 40, height: 40 }}
           />
-          <Text style={[styles.mainText, { marginTop: 10 }]}>5000</Text>
+          {userPoints ?
+          <Text style={[styles.mainText, { marginTop: 10 }]}>{userPoints}</Text>: null}
         </View>
       </View>
-      <View style ={styles.inputStyle}>
-         <TextInput placeholder='Search Courses' style ={{fontFamily: 'outfit-regular', fontSize :18, marginLeft : 10}}/>
-         <Ionicons name="search-circle" size={40} color={Colors.PRIMARY} />
+
+      <View style={styles.searchContainer}>
+        <View style={styles.inputStyle}>
+          <TextInput
+            placeholder='Search Courses'
+            style={{ 
+              fontFamily: 'outfit-regular', 
+              fontSize: 18, 
+              marginLeft: 10, 
+              flex: 1, 
+              borderWidth: 0,
+              borderColor: 'transparent'
+               }}
+            value={searchQuery}
+            onChangeText={handleSearch}
+          />
+          <Ionicons name="search-circle" size={40} color={Colors.PRIMARY} />
+        </View>
+        {showSuggestions && filteredCourses.length > 0 && (
+          <ScrollView style={styles.suggestionsContainer}>
+            <FlatList
+              data={filteredCourses}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.suggestionItem}
+                  onPress={() => handleCourseSelect(item)}
+                >
+                  <Text style={styles.suggestionText}>{item.name}</Text>
+                </TouchableOpacity>
+              )}
+            />
+          </ScrollView>
+        )}
       </View>
+  
     </View>
   )
 }
@@ -59,6 +141,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
-  }
+    placeholderTextColor: "#aaa"
+  },
+  suggestionsContainer: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: Colors.WHITE,
+    borderRadius: 25,
+    marginTop: 5,
+    maxHeight: 200,
+    elevation: 5,
+    shadowColor: Colors.BLACK,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    zIndex: 1000
+  },
+  suggestionItem: {
+    padding: 15,
+  },
+  suggestionText: {
+    fontFamily: 'outfit-regular',
+    fontSize: 18,
+    color : Colors.PRIMARY,
+  },
 })

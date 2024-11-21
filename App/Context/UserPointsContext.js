@@ -1,3 +1,4 @@
-import { createContext } from "react";
+import React, { createContext} from 'react';
 
-export const UserPointsContext = createContext(null);
+export const UserPointsContext = createContext();
+

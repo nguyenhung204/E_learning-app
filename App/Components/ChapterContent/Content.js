@@ -21,7 +21,7 @@ export default function Content({content, onChapterComplete}) {
     contendRef.scrollToIndex({animated : true,index : index + 1});
   }
 
-  return (
+  return(
     <View style = {{padding : 0, height :'100%'}}>
         <ProgressBar 
         contentLength = {content?.length}
