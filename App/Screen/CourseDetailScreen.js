@@ -51,7 +51,9 @@ export default function CourseDetailScreen() {
         // Update the enrolled courses state immediately
         setEnrolledCourse((prevCourses) => [
           ...prevCourses,
-          { id: params.course.id, courseId: params.course.id, completedChapter: [] }
+          { id: params.course.id, courseId: params.course.id, completedChapter: [] 
+            
+          }
         ]);
       }
     } catch (error) {
