@@ -12,6 +12,8 @@ const CourseProgress = () => {
     const  navigation  = useNavigation();
     const { user } = useUser();
     const [progressCourse, setProgressCourse] = useState();
+
+    
     useEffect(() => {
         user && getProgressUserCourse()
     }, [user])

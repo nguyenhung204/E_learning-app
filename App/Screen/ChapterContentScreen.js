@@ -19,7 +19,7 @@ export default function ChapterContentScreen() {
     console.log('RecordId',param.userCourseRecordId )
     }, [param])
 
-    const onChapterCompleted = () => {
+    const onChapterCompleted = async() => {
       const contentLength = param.content?.length;
       const points = Number(userPoints);
       const totalPoints = points + contentLength * 10;
@@ -28,14 +28,13 @@ export default function ChapterContentScreen() {
         console.error('Total points calculation resulted in NaN');
         return;
       }
-  
       // Optimistic update
       setIsChapterComplete(true);
       setCompletedChapters(prev => [...prev, param.chapterId]);
       setUserPoints(totalPoints);
   
       // API call
-      MarkChapterCompleted(
+      await MarkChapterCompleted(
         param.chapterId,
         param.userCourseRecordId, 
         user.primaryEmailAddress.emailAddress, 
@@ -49,7 +48,7 @@ export default function ChapterContentScreen() {
           });
         }
       }).catch(error => {
-        // Rollback on error
+        console.error('Failed to mark chapter as completed', error);
         setIsChapterComplete(false);
         setCompletedChapters(prev => prev.filter(id => id !== param.chapterId));
         setUserPoints(points);

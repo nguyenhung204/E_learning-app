@@ -162,30 +162,27 @@ export const MarkChapterCompleted = async (chapterId, recordId, userEmail, point
 
     const mutationQuery = gql`
       mutation markChapterCompleted {
-        updateUserConrolledCourse(
-          data: {completedChapter: {create: {data: {chapterId: "${chapterId}"}}}}
-          where: {id: "${recordId}"}
-        ) {
-          id
-        }
-        publishManyUserConrolledCoursesConnection {
-          edges {
-            node {
-              id
-            }
-          }
-        }
-        updateUserDetail(
-          where: {email: "${userEmail}"}, 
-          data: {point: ${points}}
-        ) {
-          point
-        }
-        publishUserDetail(where: {email: "${userEmail}"}){
-          id,
-          point
-        }
+  updateUserConrolledCourse(
+    data: {completedChapter: {create: {data: {chapterId: "`+ chapterId + `"}}}}
+    where: {id: "`+ recordId + `"}
+  ) {
+    id
+  }
+  publishManyUserConrolledCoursesConnection {
+    edges {
+      node {
+        id
       }
+    }
+  }
+  updateUserDetail( where: {email: "`+ userEmail + `"}, 
+  data: {point: `+ points + `}) {
+    point
+  }
+  publishUserDetail(where: {email: "`+ userEmail + `"}){
+    id
+  }
+}
     `;
 
     // Execute API call with timeout
@@ -201,9 +198,6 @@ export const MarkChapterCompleted = async (chapterId, recordId, userEmail, point
     return result;
 
   } catch (error) {
-    console.error('Error marking chapter completed:', error);
-    
-    // Keep pending status for retry
     return optimisticResult;
   }
 };

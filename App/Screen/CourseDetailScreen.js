@@ -1,5 +1,5 @@
-import { TouchableOpacity, ActivityIndicator } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import { TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Colors from '../Utils/Colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -9,7 +9,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { enrollCourse, getUserEnrolledCourses } from '../Services/services';
 import { useUser } from '@clerk/clerk-expo';
 import Toast from 'react-native-toast-message';
-import { CompleteChapterContext } from '../Context/CompleteChapterContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -19,7 +18,6 @@ export default function CourseDetailScreen() {
   const params = useRoute().params;
   const { user } = useUser();
   const [enrolledCourse, setEnrolledCourse] = useState([]);
-  const { isChapterComplete, setIsChapterComplete } = useContext(CompleteChapterContext);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
