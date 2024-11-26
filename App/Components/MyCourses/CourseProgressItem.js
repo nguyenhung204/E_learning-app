@@ -58,7 +58,7 @@ const CourseProgressItem = ({item, completedChapter}) => {
               }}
               >{item.price == 0 ? "Free" : item.price}</Text>
           </View>
-         { completedChapter.length === 0 ? <ProgressBarCourse
+         { completedChapter.length !== undefined ? <ProgressBarCourse
               totalChapter = {item?.chapter?.length}
               completedChapter = {completedChapter}
            /> : null}

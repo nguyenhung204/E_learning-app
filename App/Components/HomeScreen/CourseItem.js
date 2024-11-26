@@ -13,7 +13,7 @@ export default function CourseItem({item, completedChapter}) {
         marginBottom: 10,
         marginRight: 20,
     }}>
-        <Image source={{ uri: item.banner?.url }}
+        <Image source={{ uri: item?.banner?.url }}
             style={{ width: 210, height: 120, borderRadius: 15 }}
         />
         <View style={{padding : 10}}>
@@ -21,7 +21,7 @@ export default function CourseItem({item, completedChapter}) {
                 fontFamily: 'outfit-semibold',
                 fontSize: 17,
             }}>
-                {item.name}
+                {item?.name}
             </Text>
             <View style={styles.contentContainer}>
                 <View style={{
@@ -33,7 +33,7 @@ export default function CourseItem({item, completedChapter}) {
                 }}>
                     <Ionicons name="book-outline" size={18} color="black" />
                     <Text style = {{fontFamily :'outfit-regular'}}>
-                        {item.chapter?.length} Chapters
+                        {item?.chapter?.length} Chapters
                     </Text>
                 </View>
                 <View style={{
@@ -55,9 +55,9 @@ export default function CourseItem({item, completedChapter}) {
                 color : Colors.PRIMARY,
                 fontFamily : 'outfit-semibold',
             }}
-            >{item.price == 0 ? "Free" : item.price}</Text>
+            >{item?.price == 0 ? "Free" : item?.price}</Text>
         </View>
-       { completedChapter !== undefined ? <ProgressBarCourse
+        { completedChapter !== undefined ? <ProgressBarCourse
             totalChapter = {item?.chapter?.length}
             completedChapter = {completedChapter}
          /> : null}

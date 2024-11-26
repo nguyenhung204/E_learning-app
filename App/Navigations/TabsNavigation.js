@@ -6,8 +6,21 @@ import ProfileScreen from '../Screen/ProfileScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import HomeScreenNavigation from './HomeScreenNavigation';
+import { createStackNavigator } from '@react-navigation/stack';
+import CourseDetailScreen from '../Screen/CourseDetailScreen';
 
 const Tab = createBottomTabNavigator();
+
+const Stack = createStackNavigator();
+
+function MyCoursesStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MyCoursesScreen" component={MyCourses} />
+      <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
+    </Stack.Navigator>
+  );
+}
 
 export default function TabsNavigation() {
     return (
@@ -21,7 +34,7 @@ export default function TabsNavigation() {
                     )
                 }}
             />
-            <Tab.Screen name="My-course" component={MyCourses}
+            <Tab.Screen name="My-course" component={MyCoursesStack}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="book" size={size} color={color} />

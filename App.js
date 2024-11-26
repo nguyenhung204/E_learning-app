@@ -6,9 +6,10 @@ import Constant from './App/Utils/Constant';
 import { NavigationContainer } from '@react-navigation/native';
 import TabsNavigation from './App/Navigations/TabsNavigation';
 import Toast from 'react-native-toast-message';
-import { useRef, useState, useMemo} from 'react';
+import { useRef, useState, useMemo, useEffect} from 'react';
 import { CompleteChapterContext } from './App/Context/CompleteChapterContext';
 import { UserPointsContext } from './App/Context/UserPointsContext';
+import { clearAllCache } from './App/Services/services';
 export default function App() {
 
   const [isChapterComplete, setIsChapterComplete] = useState(false);
@@ -23,14 +24,15 @@ export default function App() {
 
   const toastRef = useRef();
 
+  useEffect(() => {
+    return () => {
+      clearAllCache();
+    };
+  }, []);
+
   if (!fontsloaded) {
     return null; // or a loading spinner
   }
-
-  // const userPointsContextValue = useMemo(() => ({
-  //   userPoints,
-  //   setUserPoints,
-  // }), [userPoints]);
 
   return (
     <ClerkProvider publishableKey={Constant.ClerkKey}>

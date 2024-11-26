@@ -110,28 +110,41 @@ export const enrollCourse = async (courseId, userEmail) => {
 };
 
 export const getUserEnrolledCourses = async (courseId, userEmail) => {
-  const query = gql`
-    query GetUserEnrolledCourse {
-      userConrolledCourses(
-        where: {
-          courseId: "${courseId}",
-          userEmail: "${userEmail}" 
-        }
-      ) {
-        id
-        courseId
-        completedChapter {
-          chapterId
+  try {
+    const cachedData = await AsyncStorage.getItem(`enrolled-course-${courseId}`);
+    if (cachedData) {
+      return { userConrolledCourses: [JSON.parse(cachedData)] };
+    }
+
+    const query = gql`
+      query GetUserEnrolledCourse {
+        userConrolledCourses(
+          where: {
+            courseId: "${courseId}",
+            userEmail: "${userEmail}" 
+          }
+        ) {
+          id
+          courseId
+          completedChapter {
+            chapterId
+          }
         }
       }
-    }
-  `;
-
-  try {
+    `;
     const result = await request(MASTER_URL, query);
-    return {
-      userConrolledCourses: result?.userConrolledCourses || []
-    };
+
+     
+    // Cache the result
+    if (result.userConrolledCourses?.[0]) {
+      await AsyncStorage.setItem(
+        `enrolled-course-${courseId}`,
+        JSON.stringify(result.userConrolledCourses[0])
+      );
+    }
+
+    return result;
+
   } catch (error) {
     console.error('Error getting enrolled courses:', error);
     return { userConrolledCourses: [] };
@@ -139,14 +152,12 @@ export const getUserEnrolledCourses = async (courseId, userEmail) => {
 };
 
 export const MarkChapterCompleted = async (chapterId, recordId, userEmail, points) => {
-  // Generate optimistic update
   const optimisticResult = {
     id: `temp-${Date.now()}`,
     chapterId,
     userEmail,
     points
   };
-
   try {
     // Store pending update in cache
     await AsyncStorage.setItem(
@@ -300,3 +311,26 @@ export const getProgressCourse = async ( userEmail) => {
   const result = await request(MASTER_URL, query);
   return result;
 }
+
+
+export const clearAllCache = async () => {
+  try {
+    // Get all cache keys
+    const keys = await AsyncStorage.getAllKeys();
+    
+    // Filter cache keys
+    const cacheKeys = keys.filter(key => 
+      key.startsWith('enrolled-course-') ||
+      key.startsWith('chapter-completion-') 
+    );
+
+    // Remove all cached items
+    if (cacheKeys.length > 0) {
+      await AsyncStorage.multiRemove(cacheKeys);
+    }
+    
+    console.log('Cache cleared successfully');
+  } catch (error) {
+    console.error('Error clearing cache:', error);
+  }
+};

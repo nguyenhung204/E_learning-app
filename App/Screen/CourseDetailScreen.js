@@ -38,24 +38,46 @@ export default function CourseDetailScreen() {
 
   const UserEnrollCourse = async () => {
     setLoading(true);
+
+    const tempEnrollment = {
+      id: `temp-${Date.now()}`,
+      courseId: params.course.id,
+      userEmail: user.primaryEmailAddress.emailAddress,
+      completedChapter: []
+    };
+
     try {
+
+      await AsyncStorage.setItem(
+        `enrolled-course-${params.course.id}`,
+        JSON.stringify(tempEnrollment)
+      );
+
+      setEnrolledCourse(prev => [...prev, tempEnrollment]);
+
+      Toast.show({
+        text1: 'Course Enrolled Successfully',
+        text2: 'You have successfully enrolled the course',
+        type: 'success'
+      });
+
+       // Then push to server
       const response = await enrollCourse(params.course.id, user.primaryEmailAddress.emailAddress);
+      
       if (response) {
-        Toast.show({
-          text1: 'Course Enrolled Successfully',
-          text2: 'You have successfully enrolled the course',
-          type: 'success'
-        });
-        // Update the enrolled courses state immediately
-        setEnrolledCourse((prevCourses) => [
-          ...prevCourses,
-          { id: params.course.id, courseId: params.course.id, completedChapter: [] 
-            
-          }
-        ]);
+        // Update cache with server response
+        await AsyncStorage.setItem(
+          `enrolled-course-${params.course.id}`,
+          JSON.stringify(response)
+        );
       }
     } catch (error) {
-      console.error('Enrollment error:', error);
+      await AsyncStorage.removeItem(`enrolled-course-${params.course.id}`);
+
+      setEnrolledCourse(prev => 
+        prev.filter(course => course.id !== tempEnrollment.id)
+      );
+      
       Toast.show({
         text1: 'Error',
         text2: 'Failed to enroll in course',

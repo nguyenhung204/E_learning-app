@@ -7,7 +7,7 @@ import ChapterContentScreen from '../Screen/ChapterContentScreen';
 const Stack = createStackNavigator();
 export default function HomeScreenNavigation() {
   return (
-      <Stack.Navigator screenOptions={{headerShown : false}}>
+      <Stack.Navigator initialRouteName='Home' screenOptions={{headerShown : false}}>
         <Stack.Screen name="Home" component={HomeScreen}/>
         <Stack.Screen name="CourseDetail" component={CourseDetailScreen}/>
         <Stack.Screen name="ChapterContent" component={ChapterContentScreen}/>
