@@ -76,7 +76,7 @@ export const getCourseList = async (level) => {
 
 export const enrollCourse = async (courseId, userEmail) => {
   const mutationQuery = gql`
-    mutation MyMutation {
+    mutation enrollCourse {
       createUserConrolledCourse(
         data: {
           courseId: "${courseId}",
@@ -200,7 +200,7 @@ export const MarkChapterCompleted = async (chapterId, recordId, userEmail, point
     const result = await Promise.race([
       request(MASTER_URL, mutationQuery),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Request timeout')), 10000)
+        setTimeout(() => reject(new Error('Request timeout')), 1000)
       )
     ]);
 
@@ -320,8 +320,9 @@ export const clearAllCache = async () => {
     
     // Filter cache keys
     const cacheKeys = keys.filter(key => 
-      key.startsWith('enrolled-course-') ||
-      key.startsWith('chapter-completion-') 
+      key.startsWith('enrolled-course-') || 
+      key.startsWith('chapter-completion-') ||
+      key.startsWith('courses-') 
     );
 
     // Remove all cached items

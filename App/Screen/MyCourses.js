@@ -25,7 +25,7 @@ export default function MyCourses() {
   };
 
   return (
-    <View>
+    <View style ={{marginBottom : 200}}>
       <View style={{
         height: 160,
         backgroundColor: Colors.PRIMARY,

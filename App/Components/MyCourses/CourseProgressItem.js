@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import ProgressBarCourse from '../HomeScreen/ProgressBarCourse';
 import Colors from '../../Utils/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const CourseProgressItem = ({item, completedChapter}) => {
     return (
-      <View style={{
+      <ScrollView style={{
           padding: 10,
           backgroundColor: Colors.WHITE,
           borderRadius: 15,
@@ -62,7 +62,7 @@ const CourseProgressItem = ({item, completedChapter}) => {
               totalChapter = {item?.chapter?.length}
               completedChapter = {completedChapter}
            /> : null}
-      </View>
+      </ScrollView>
     )
   }
   const styles = StyleSheet.create({

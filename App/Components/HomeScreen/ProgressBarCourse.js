@@ -26,7 +26,7 @@ const ProgressBarCourse = ({totalChapter, completedChapter} ) => {
     checkCachedCompletions();
 }, [completedChapter]);
 
-const width = Math.min(((cachedProgress || completedChapter) / totalChapter) * 100, 100) + "%";
+const width = Math.min(((cachedProgress || completedChapter) / totalChapter) * 100) + "%";
 
   return (
     <View style = {{

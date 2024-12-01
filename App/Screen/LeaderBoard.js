@@ -5,13 +5,15 @@ import Colors from '../Utils/Colors';
 import Gold from '../../assets/images/Gold.png';
 import Silver from '../../assets/images/Silver.png';
 import Bronze from '../../assets/images/Bronze.png';
+import { useUser } from '@clerk/clerk-expo';
 
 export default function LeaderBoard() {
+  const { user } = useUser();
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
     getAllUserDetail();
-  }, []);
+  }, [user]);
 
   const getAllUserDetail = () => {
     getAllUser().then((response) => {

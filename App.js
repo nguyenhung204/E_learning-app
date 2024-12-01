@@ -1,15 +1,14 @@
 import { useFonts } from 'expo-font';
-import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-expo';
+import { ClerkProvider, SignedIn, SignedOut, useUser } from '@clerk/clerk-expo';
 import { StyleSheet, View } from 'react-native';
 import LoginScreen from './App/Screen/LoginScreen';
 import Constant from './App/Utils/Constant';
 import { NavigationContainer } from '@react-navigation/native';
 import TabsNavigation from './App/Navigations/TabsNavigation';
 import Toast from 'react-native-toast-message';
-import { useRef, useState, useMemo, useEffect} from 'react';
+import { useRef, useState} from 'react';
 import { CompleteChapterContext } from './App/Context/CompleteChapterContext';
 import { UserPointsContext } from './App/Context/UserPointsContext';
-import { clearAllCache } from './App/Services/services';
 export default function App() {
 
   const [isChapterComplete, setIsChapterComplete] = useState(false);
@@ -22,13 +21,8 @@ export default function App() {
     'outfit-bold': require('./assets/fonts/Outfit-Bold.ttf'),
   });
 
-  const toastRef = useRef();
 
-  useEffect(() => {
-    return () => {
-      clearAllCache();
-    };
-  }, []);
+  const toastRef = useRef();
 
   if (!fontsloaded) {
     return null; // or a loading spinner

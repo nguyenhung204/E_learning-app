@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from 'react'
 import Header from '../Components/HomeScreen/Header'
 import Colors from '../Utils/Colors'
 import Courses from '../Components/HomeScreen/Courses'
-import { createNewUser } from '../Services/services'
+import { clearAllCache, createNewUser } from '../Services/services'
 import { useUser } from '@clerk/clerk-expo'
 import CourseProgress from '../Components/HomeScreen/CourseProgress'
 import { getUserDetail } from '../Services/services'
@@ -29,6 +29,12 @@ export default function HomeScreen() {
     }
   }, [user, setUserPoints]);
 
+  useEffect(() => {
+    return () => {
+      clearAllCache();
+    };
+  }, [!user]);
+
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -45,7 +51,6 @@ export default function HomeScreen() {
       }
     };
     fetchUserDetails();
-    console.log('User 3:', user);
   }, [user]);
 
 

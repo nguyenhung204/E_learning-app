@@ -98,10 +98,11 @@ export default function Header() {
           <Ionicons name="search-circle" size={40} color={Colors.PRIMARY} />
         </View>
         {showSuggestions && filteredCourses.length > 0 && (
-          <ScrollView style={styles.suggestionsContainer}>
+          <View style={styles.suggestionsContainer}>
             <FlatList
               data={filteredCourses}
               keyExtractor={(item) => item.id}
+              nestedScrollEnabled={true}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.suggestionItem}
@@ -111,7 +112,7 @@ export default function Header() {
                 </TouchableOpacity>
               )}
             />
-          </ScrollView>
+          </View>
         )}
       </View>
   
@@ -151,7 +152,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.WHITE,
     borderRadius: 25,
     marginTop: 5,
-    maxHeight: 200,
     elevation: 5,
     shadowColor: Colors.BLACK,
     shadowOffset: { width: 0, height: 5 },
